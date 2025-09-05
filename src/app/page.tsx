@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GateHeader } from '../components/GateHeader';
 import { ZoneCard } from '../components/ZoneCard';
+import { TicketModal } from '../components/TicketModal';
 
 // Mock zone data for testing
 const mockZones = [
@@ -47,20 +48,62 @@ const mockZones = [
   }
 ];
 
+// Mock gate data
+const mockGate = {
+  id: 'gate_1',
+  name: 'Main Entrance'
+};
+
 export default function Home() {
   const [selectedZone, setSelectedZone] = useState<string | null>(null);
+  const [showTicket, setShowTicket] = useState(false);
+  const [currentTime, setCurrentTime] = useState<string>('');
+
+  // Update time on client side only to avoid hydration mismatch
+  useEffect(() => {
+    const updateTime = () => {
+      setCurrentTime(new Date().toLocaleString());
+    };
+    
+    updateTime(); // Set initial time
+    const interval = setInterval(updateTime, 1000); // Update every second
+    
+    return () => clearInterval(interval);
+  }, []);
 
   const handleZoneSelect = (zoneId: string) => {
     setSelectedZone(zoneId);
   };
 
+  const handleCheckIn = () => {
+    if (selectedZone) {
+      setShowTicket(true);
+    }
+  };
+
+  const handleCloseTicket = () => {
+    setShowTicket(false);
+    setSelectedZone(null);
+  };
+
+  // Create mock ticket data
+  const mockTicket = selectedZone ? {
+    id: `t_${Date.now()}`,
+    type: 'visitor' as const,
+    zoneId: selectedZone,
+    gateId: mockGate.id,
+    checkinAt: new Date().toISOString()
+  } : null;
+
+  const selectedZoneData = selectedZone ? mockZones.find(z => z.id === selectedZone) : null;
+
   return (
     <div className="min-h-screen bg-gray-50">
       <GateHeader 
-        gateId="gate_1"
-        gateName="Main Entrance"
+        gateId={mockGate.id}
+        gateName={mockGate.name}
         connectionStatus="connected"
-        currentTime={new Date().toLocaleString()}
+        currentTime={currentTime}
       />
       
       <div className="container mx-auto p-6">
@@ -83,12 +126,25 @@ export default function Home() {
 
         {selectedZone && (
           <div className="text-center">
-            <button className="bg-green-600 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-green-700">
-              Go to Zone {selectedZone}
+            <button 
+              onClick={handleCheckIn}
+              className="bg-green-600 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-green-700"
+            >
+              Check In to Zone {selectedZone}
             </button>
           </div>
         )}
       </div>
+
+      {showTicket && mockTicket && selectedZoneData && (
+        <TicketModal 
+          ticket={mockTicket}
+          zone={selectedZoneData}
+          gate={mockGate}
+          isOpen={showTicket}
+          onClose={handleCloseTicket}
+        />
+      )}
     </div>
   );
 }
