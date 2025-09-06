@@ -138,7 +138,7 @@ export default function GateScreen({ params }: { params: Promise<{ gateId: strin
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Gate Not Found</h1>
-          <p className="text-gray-600">Gate {gateId} does not exist</p>
+          <p className="text-gray-800">Gate {gateId} does not exist</p>
         </div>
       </div>
     );
@@ -159,7 +159,7 @@ export default function GateScreen({ params }: { params: Promise<{ gateId: strin
             <button className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-md">
               Visitor
             </button>
-            <button className="flex-1 py-2 px-4 text-gray-600">
+            <button className="flex-1 py-2 px-4 text-gray-800">
               Subscriber
             </button>
           </div>
@@ -167,7 +167,7 @@ export default function GateScreen({ params }: { params: Promise<{ gateId: strin
 
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Available Zones</h2>
-          <p className="text-gray-600">Select a zone to check in</p>
+          <p className="text-gray-800">Select a zone to check in</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">

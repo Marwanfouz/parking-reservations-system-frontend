@@ -41,9 +41,19 @@ export default function Home() {
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
               Welcome to Parking Reservation System
             </h2>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-800 text-lg mb-6">
               Select a gate to begin check-in process
             </p>
+            
+            {/* Employee Access */}
+            <div className="mb-8">
+              <Link 
+                href="/checkpoint"
+                className="inline-block bg-gray-600 text-white py-2 px-6 rounded-md hover:bg-gray-700 transition-colors"
+              >
+                Employee Checkpoint
+              </Link>
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -57,7 +67,7 @@ export default function Home() {
                   <div className="text-2xl font-bold text-gray-900 mb-2">
                     {gate.name}
                   </div>
-                  <div className="text-sm text-gray-600 mb-4">
+                  <div className="text-sm text-gray-800 mb-4">
                     Gate {gate.id} • {gate.location}
                   </div>
                   <div className="bg-blue-600 text-white py-2 px-4 rounded-md inline-block">

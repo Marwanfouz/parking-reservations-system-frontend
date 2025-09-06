@@ -33,7 +33,7 @@ export function TicketModal({ ticket, zone, gate, isOpen, onClose }: TicketModal
           <h2 className="text-2xl font-bold">Parking Ticket</h2>
           <button 
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-xl"
+            className="text-gray-800 hover:text-gray-900 text-xl"
             aria-label="Close ticket"
           >
             ✕
@@ -43,32 +43,32 @@ export function TicketModal({ ticket, zone, gate, isOpen, onClose }: TicketModal
         <div className="space-y-4 ticket-content">
           <div className="text-center">
             <div className="text-3xl font-bold text-blue-600">{ticket.id}</div>
-            <div className="text-sm text-gray-600">Ticket ID</div>
+            <div className="text-sm text-gray-800">Ticket ID</div>
           </div>
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <div className="text-sm text-gray-600">Type</div>
-              <div className="font-semibold capitalize">{ticket.type}</div>
+              <div className="text-sm text-gray-800">Type</div>
+              <div className="font-semibold text-gray-900 capitalize">{ticket.type}</div>
             </div>
             <div>
-              <div className="text-sm text-gray-600">Zone</div>
-              <div className="font-semibold">{zone.name}</div>
+              <div className="text-sm text-gray-800">Zone</div>
+              <div className="font-semibold text-gray-900">{zone.name}</div>
             </div>
             <div>
-              <div className="text-sm text-gray-600">Gate</div>
-              <div className="font-semibold">{gate.name}</div>
+              <div className="text-sm text-gray-800">Gate</div>
+              <div className="font-semibold text-gray-900">{gate.name}</div>
             </div>
             <div>
-              <div className="text-sm text-gray-600">Check-in Time</div>
-              <div className="font-semibold">{new Date(ticket.checkinAt).toLocaleString()}</div>
+              <div className="text-sm text-gray-800">Check-in Time</div>
+              <div className="font-semibold text-gray-900">{new Date(ticket.checkinAt).toLocaleString()}</div>
             </div>
           </div>
           
           <div className="text-center pt-4">
             <div className="inline-block p-4 bg-green-100 rounded-lg">
               <div className="text-green-600 text-lg font-semibold">✓ Gate Open</div>
-              <div className="text-sm text-gray-600">You may proceed</div>
+              <div className="text-sm text-gray-800">You may proceed</div>
             </div>
           </div>
           

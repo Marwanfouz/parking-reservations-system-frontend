@@ -37,39 +37,39 @@ export function ZoneCard({ zone, onSelect, disabled, selected }: ZoneCardProps) 
       <div className="grid grid-cols-2 gap-4 mb-3">
         <div className="text-center">
           <div className="text-2xl font-bold text-green-600">{zone.free}</div>
-          <div className="text-sm text-gray-600">Free</div>
+          <div className="text-sm text-gray-800">Free</div>
         </div>
         <div className="text-center">
           <div className="text-2xl font-bold text-blue-600">{zone.occupied}</div>
-          <div className="text-sm text-gray-600">Occupied</div>
+          <div className="text-sm text-gray-800">Occupied</div>
         </div>
       </div>
       
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span>Available for Visitors:</span>
+          <span className="text-gray-800">Available for Visitors:</span>
           <span className={`font-semibold ${zone.availableForVisitors > 0 ? 'text-green-600' : 'text-red-600'}`}>
             {zone.availableForVisitors}
           </span>
         </div>
         <div className="flex justify-between text-sm">
-          <span>Available for Subscribers:</span>
+          <span className="text-gray-800">Available for Subscribers:</span>
           <span className="font-semibold text-blue-600">{zone.availableForSubscribers}</span>
         </div>
         <div className="flex justify-between text-sm">
-          <span>Reserved:</span>
+          <span className="text-gray-800">Reserved:</span>
           <span className="font-semibold text-orange-600">{zone.reserved}</span>
         </div>
       </div>
       
       <div className="mt-3 pt-3 border-t">
         <div className="flex justify-between text-sm">
-          <span>Normal Rate:</span>
-          <span className="font-semibold">${zone.rateNormal}/hr</span>
+          <span className="text-gray-800">Normal Rate:</span>
+          <span className="font-semibold text-gray-900">${zone.rateNormal}/hr</span>
         </div>
         <div className="flex justify-between text-sm">
-          <span>Special Rate:</span>
-          <span className="font-semibold">${zone.rateSpecial}/hr</span>
+          <span className="text-gray-800">Special Rate:</span>
+          <span className="font-semibold text-gray-900">${zone.rateSpecial}/hr</span>
         </div>
       </div>
       

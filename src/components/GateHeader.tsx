@@ -1,8 +1,8 @@
 interface GateHeaderProps {
-  gateId: string;
-  gateName: string;
-  connectionStatus: 'connected' | 'disconnected' | 'connecting';
-  currentTime: string;
+  readonly gateId: string;
+  readonly gateName: string;
+  readonly connectionStatus: 'connected' | 'disconnected' | 'connecting';
+  readonly currentTime: string;
 }
 
 export function GateHeader({ gateId, gateName, connectionStatus, currentTime }: GateHeaderProps) {
@@ -27,16 +27,16 @@ export function GateHeader({ gateId, gateName, connectionStatus, currentTime }: 
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">{gateName}</h1>
-          <p className="text-lg opacity-90">Gate {gateId}</p>
+          <p className="text-lg text-white">Gate {gateId}</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className={`w-3 h-3 rounded-full ${getStatusColor()} animate-pulse`} />
-            <span className="text-sm">{getStatusText()}</span>
+            <span className="text-sm text-white">{getStatusText()}</span>
           </div>
-          <div className="text-sm">
-            {currentTime}
-          </div>
+                 <div className="text-sm text-white">
+                   {currentTime}
+                 </div>
         </div>
       </div>
     </header>
