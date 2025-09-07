@@ -3,38 +3,50 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { GateHeader } from '../components/GateHeader';
-
-// Mock gate data
-const mockGates = [
-  { id: 'gate_1', name: 'Main Entrance', location: 'North' },
-  { id: 'gate_2', name: 'Side Entrance', location: 'East' },
-  { id: 'gate_3', name: 'Back Entrance', location: 'South' }
-];
+import { useGates } from '../hooks/useApi';
 
 export default function Home() {
   const [currentTime, setCurrentTime] = useState<string>('');
+  const { data: gates, isLoading, error } = useGates();
 
-  // Update time on client side only to avoid hydration mismatch
   useEffect(() => {
     const updateTime = () => {
       setCurrentTime(new Date().toLocaleString());
     };
-    
     updateTime();
     const interval = setInterval(updateTime, 1000);
-    
     return () => clearInterval(interval);
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-xl text-gray-800">Loading gates...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-xl text-red-600">Error loading gates: {error.message}</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <GateHeader 
+      <GateHeader
         gateId="system"
         gateName="Parking Reservation System"
         connectionStatus="connected"
         currentTime={currentTime}
       />
-      
+
       <div className="container mx-auto p-6">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-4xl mx-auto">
           <div className="text-center mb-8">
@@ -55,10 +67,10 @@ export default function Home() {
               </Link>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {mockGates.map(gate => (
-              <Link 
+            {gates?.map(gate => (
+              <Link
                 key={gate.id}
                 href={`/gate/${gate.id}`}
                 className="block bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-gray-200 rounded-lg p-6 hover:border-blue-300 hover:shadow-md transition-all"
@@ -77,7 +89,6 @@ export default function Home() {
               </Link>
             ))}
           </div>
-          
         </div>
       </div>
     </div>

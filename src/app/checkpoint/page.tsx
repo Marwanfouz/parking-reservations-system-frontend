@@ -237,9 +237,9 @@ export default function CheckpointScreen() {
               ticketId={ticketId}
               ticket={ticket}
               subscription={subscription}
-              billingBreakdown={billingData?.billingBreakdown}
-              totalAmount={billingData?.totalAmount}
-              durationHours={billingData?.durationHours}
+              billingBreakdown={billingData?.billingBreakdown || []}
+              totalAmount={billingData?.totalAmount || 0}
+              durationHours={billingData?.durationHours || 0}
               onCheckout={handleCheckout}
               isLoading={isLoading}
             />
