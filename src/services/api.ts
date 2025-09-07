@@ -155,3 +155,77 @@ export async function fetchTicket(ticketId: string): Promise<Ticket> {
   }
   return response.json();
 }
+
+// Admin API functions
+export async function loginAdmin(username: string, password: string): Promise<{ user: { id: string; username: string; role: string }; token: string }> {
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Login failed');
+  }
+  
+  return response.json();
+}
+
+export async function fetchAdminSubscriptions(token: string): Promise<Subscription[]> {
+  const response = await fetch(`${API_BASE_URL}/admin/subscriptions`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch subscriptions: ${response.statusText}`);
+  }
+  
+  return response.json();
+}
+
+export async function fetchAdminReports(token: string): Promise<any> {
+  const response = await fetch(`${API_BASE_URL}/admin/reports/parking-state`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch reports: ${response.statusText}`);
+  }
+  
+  return response.json();
+}
+
+export async function updateZoneStatus(zoneId: string, open: boolean, token: string): Promise<any> {
+  const response = await fetch(`${API_BASE_URL}/admin/zones/${zoneId}/open`, {
+    method: 'PUT',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ open }),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to update zone status: ${response.statusText}`);
+  }
+  
+  return response.json();
+}
+
+export async function updateCategoryRates(categoryId: string, rateNormal: number, rateSpecial: number, token: string): Promise<any> {
+  const response = await fetch(`${API_BASE_URL}/admin/categories/${categoryId}`, {
+    method: 'PUT',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ rateNormal, rateSpecial }),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to update category rates: ${response.statusText}`);
+  }
+  
+  return response.json();
+}

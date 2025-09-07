@@ -6,6 +6,11 @@ import {
   checkinTicket,
   checkoutTicket,
   fetchTicket,
+  loginAdmin,
+  fetchAdminSubscriptions,
+  fetchAdminReports,
+  updateZoneStatus,
+  updateCategoryRates,
 } from '../services/api';
 
 // Query keys
@@ -70,8 +75,62 @@ export function useCheckoutTicket() {
   
   return useMutation({
     mutationFn: checkoutTicket,
-    onSuccess: (data) => {
+    onSuccess: () => {
       // Invalidate zones query to refetch updated zone data
+      queryClient.invalidateQueries({ queryKey: ['zones'] });
+    },
+  });
+}
+
+// Admin hooks
+export function useLoginAdmin() {
+  return useMutation({
+    mutationFn: ({ username, password }: { username: string; password: string }) => 
+      loginAdmin(username, password),
+  });
+}
+
+export function useAdminSubscriptions(token: string, enabled: boolean) {
+  return useQuery({
+    queryKey: ['admin', 'subscriptions'],
+    queryFn: () => fetchAdminSubscriptions(token),
+    enabled: enabled && !!token,
+  });
+}
+
+export function useAdminReports(token: string, enabled: boolean) {
+  return useQuery({
+    queryKey: ['admin', 'reports'],
+    queryFn: () => fetchAdminReports(token),
+    enabled: enabled && !!token,
+  });
+}
+
+export function useUpdateZoneStatus() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({ zoneId, open, token }: { zoneId: string; open: boolean; token: string }) =>
+      updateZoneStatus(zoneId, open, token),
+    onSuccess: () => {
+      // Invalidate zones queries to refetch updated data
+      queryClient.invalidateQueries({ queryKey: ['zones'] });
+    },
+  });
+}
+
+export function useUpdateCategoryRates() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({ categoryId, rateNormal, rateSpecial, token }: { 
+      categoryId: string; 
+      rateNormal: number; 
+      rateSpecial: number; 
+      token: string;
+    }) => updateCategoryRates(categoryId, rateNormal, rateSpecial, token),
+    onSuccess: () => {
+      // Invalidate zones queries to refetch updated rates
       queryClient.invalidateQueries({ queryKey: ['zones'] });
     },
   });

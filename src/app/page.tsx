@@ -57,15 +57,21 @@ export default function Home() {
               Select a gate to begin check-in process
             </p>
             
-            {/* Employee Access */}
-            <div className="mb-8">
-              <Link 
-                href="/checkpoint"
-                className="inline-block bg-gray-600 text-white py-2 px-6 rounded-md hover:bg-gray-700 transition-colors"
-              >
-                Employee Checkpoint
-              </Link>
-            </div>
+                        {/* Employee Access */}
+                        <div className="mb-8">
+                          <Link
+                            href="/checkpoint"
+                            className="inline-block bg-gray-600 text-white py-2 px-6 rounded-md hover:bg-gray-700 transition-colors mr-4"
+                          >
+                            Employee Checkpoint
+                          </Link>
+                          <Link
+                            href="/admin/login"
+                            className="inline-block bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition-colors"
+                          >
+                            Admin Login
+                          </Link>
+                        </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
