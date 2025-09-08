@@ -51,6 +51,7 @@ export interface Ticket {
   gateId: string;
   checkinAt: string;
   checkoutAt?: string;
+  subscriptionId?: string;
 }
 
 export interface CheckinResponse {

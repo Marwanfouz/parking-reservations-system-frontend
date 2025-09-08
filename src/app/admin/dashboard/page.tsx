@@ -14,7 +14,7 @@ export default function AdminDashboard() {
 
   // API hooks
   const { data: subscriptions, isLoading: subscriptionsLoading } = useAdminSubscriptions(adminToken, !!adminToken);
-  const { data: reports, isLoading: reportsLoading } = useAdminReports(adminToken, !!adminToken);
+  const { isLoading: reportsLoading } = useAdminReports(adminToken, !!adminToken);
   const { data: gates } = useGates();
   const { data: allZones } = useZones('all'); // We'll need to modify this to get all zones
   const updateZoneMutation = useUpdateZoneStatus();

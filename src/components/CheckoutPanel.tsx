@@ -20,7 +20,7 @@ interface CheckoutPanelProps {
       readonly model: string;
       readonly color: string;
     }>;
-  };
+  } | undefined;
   readonly billingBreakdown?: Array<{
     readonly from: string;
     readonly to: string;
@@ -83,8 +83,8 @@ export function CheckoutPanel({
           <div className="bg-yellow-50 border border-yellow-200 rounded p-4">
             <div className="text-sm text-gray-700 mb-2">Subscriber: {subscription.userName}</div>
             <div className="space-y-2">
-              {subscription.cars.map((car, index) => (
-                <div key={index} className="text-sm text-gray-800">
+              {subscription.cars.map((car) => (
+                <div key={car.plate} className="text-sm text-gray-800">
                   <span className="font-semibold text-gray-900">{car.plate}</span> - {car.brand} {car.model} ({car.color})
                 </div>
               ))}
@@ -98,8 +98,8 @@ export function CheckoutPanel({
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-2">Billing Breakdown</h3>
           <div className="space-y-2">
-            {billingBreakdown.map((segment, index) => (
-              <div key={index} className="flex justify-between text-sm border-b pb-2">
+            {billingBreakdown.map((segment) => (
+              <div key={`${segment.from}-${segment.to}`} className="flex justify-between text-sm border-b pb-2">
                 <div>
                   <div>{new Date(segment.from).toLocaleTimeString()} - {new Date(segment.to).toLocaleTimeString()}</div>
                   <div className="text-gray-700">{segment.hours.toFixed(2)} hours @ ${segment.rate}/hr ({segment.rateMode})</div>
