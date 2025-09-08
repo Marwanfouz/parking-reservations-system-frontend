@@ -11,6 +11,9 @@ import {
   fetchAdminReports,
   updateZoneStatus,
   updateCategoryRates,
+  createRushHours,
+  createVacation,
+  fetchCategories,
 } from '../services/api';
 
 // Query keys
@@ -133,5 +136,40 @@ export function useUpdateCategoryRates() {
       // Invalidate zones queries to refetch updated rates
       queryClient.invalidateQueries({ queryKey: ['zones'] });
     },
+  });
+}
+
+// Additional admin hooks
+export function useCreateRushHours() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({ data, token }: { data: { weekDay: number; from: string; to: string }; token: string }) =>
+      createRushHours(data, token),
+    onSuccess: () => {
+      // Invalidate zones queries to refetch updated rates
+      queryClient.invalidateQueries({ queryKey: ['zones'] });
+    },
+  });
+}
+
+export function useCreateVacation() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({ data, token }: { data: { name: string; from: string; to: string }; token: string }) =>
+      createVacation(data, token),
+    onSuccess: () => {
+      // Invalidate zones queries to refetch updated rates
+      queryClient.invalidateQueries({ queryKey: ['zones'] });
+    },
+  });
+}
+
+export function useCategories(token: string, enabled: boolean) {
+  return useQuery({
+    queryKey: ['admin', 'categories'],
+    queryFn: () => fetchCategories(token),
+    enabled: enabled && !!token,
   });
 }

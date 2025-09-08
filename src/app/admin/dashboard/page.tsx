@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAdminSubscriptions, useAdminReports, useUpdateZoneStatus, useGates, useZones } from '../../../hooks/useApi';
+import { useAdminSubscriptions, useAdminReports, useUpdateZoneStatus, useGates, useZones, useCreateRushHours, useCreateVacation, useCategories } from '../../../hooks/useApi';
 import { useWebSocket } from '../../../hooks/useWebSocket';
 
 export default function AdminDashboard() {
   const [adminToken, setAdminToken] = useState<string>('');
   const [adminUser, setAdminUser] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'zones' | 'subscriptions' | 'reports'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'zones' | 'subscriptions' | 'reports' | 'categories' | 'rush-hours' | 'vacations'>('overview');
   const [currentTime, setCurrentTime] = useState<string>('');
   const router = useRouter();
 
@@ -18,6 +18,13 @@ export default function AdminDashboard() {
   const { data: gates } = useGates();
   const { data: allZones } = useZones('all'); // We'll need to modify this to get all zones
   const updateZoneMutation = useUpdateZoneStatus();
+  const createRushHoursMutation = useCreateRushHours();
+  const createVacationMutation = useCreateVacation();
+  const { data: categories, isLoading: categoriesLoading } = useCategories(adminToken, !!adminToken);
+
+  // State for forms
+  const [rushHoursForm, setRushHoursForm] = useState({ weekDay: 1, from: '07:00', to: '09:00' });
+  const [vacationForm, setVacationForm] = useState({ name: '', from: '', to: '' });
 
   // WebSocket for real-time updates
   const { connectionStatus, onAdminUpdate } = useWebSocket();
@@ -74,6 +81,32 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleCreateRushHours = async () => {
+    try {
+      await createRushHoursMutation.mutateAsync({
+        data: rushHoursForm,
+        token: adminToken,
+      });
+      setRushHoursForm({ weekDay: 1, from: '07:00', to: '09:00' });
+      alert('Rush hours created successfully!');
+    } catch (error: any) {
+      alert(`Failed to create rush hours: ${error.message}`);
+    }
+  };
+
+  const handleCreateVacation = async () => {
+    try {
+      await createVacationMutation.mutateAsync({
+        data: vacationForm,
+        token: adminToken,
+      });
+      setVacationForm({ name: '', from: '', to: '' });
+      alert('Vacation period created successfully!');
+    } catch (error: any) {
+      alert(`Failed to create vacation: ${error.message}`);
+    }
+  };
+
   if (!adminToken || !adminUser) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -118,6 +151,9 @@ export default function AdminDashboard() {
             { id: 'zones', label: 'Zone Management' },
             { id: 'subscriptions', label: 'Subscriptions' },
             { id: 'reports', label: 'Reports' },
+            { id: 'categories', label: 'Categories' },
+            { id: 'rush-hours', label: 'Rush Hours' },
+            { id: 'vacations', label: 'Vacations' },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -267,6 +303,163 @@ export default function AdminDashboard() {
                   </ul>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'categories' && (
+          <div className="bg-white rounded-lg shadow">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">Categories</h3>
+            </div>
+            <div className="p-6">
+              {categoriesLoading ? (
+                <p className="text-gray-600">Loading categories...</p>
+              ) : (
+                <div className="space-y-4">
+                  {categories?.map((category: any) => (
+                    <div key={category.id} className="border rounded-lg p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-medium text-gray-900">{category.name}</h4>
+                          <p className="text-sm text-gray-600">ID: {category.id}</p>
+                          <p className="text-sm text-gray-600">{category.description}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm text-gray-600">
+                            <div>Normal Rate: ${category.rateNormal}</div>
+                            <div>Special Rate: ${category.rateSpecial}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'rush-hours' && (
+          <div className="bg-white rounded-lg shadow">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">Rush Hours Management</h3>
+            </div>
+            <div className="p-6">
+              <div className="max-w-md">
+                <h4 className="text-md font-medium text-gray-900 mb-4">Add New Rush Hours</h4>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Week Day
+                    </label>
+                    <select
+                      value={rushHoursForm.weekDay}
+                      onChange={(e) => setRushHoursForm({ ...rushHoursForm, weekDay: parseInt(e.target.value) })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value={1}>Monday</option>
+                      <option value={2}>Tuesday</option>
+                      <option value={3}>Wednesday</option>
+                      <option value={4}>Thursday</option>
+                      <option value={5}>Friday</option>
+                      <option value={6}>Saturday</option>
+                      <option value={0}>Sunday</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      From Time
+                    </label>
+                    <input
+                      type="time"
+                      value={rushHoursForm.from}
+                      onChange={(e) => setRushHoursForm({ ...rushHoursForm, from: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      To Time
+                    </label>
+                    <input
+                      type="time"
+                      value={rushHoursForm.to}
+                      onChange={(e) => setRushHoursForm({ ...rushHoursForm, to: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  
+                  <button
+                    onClick={handleCreateRushHours}
+                    disabled={createRushHoursMutation.isPending}
+                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {createRushHoursMutation.isPending ? 'Creating...' : 'Create Rush Hours'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'vacations' && (
+          <div className="bg-white rounded-lg shadow">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">Vacation Management</h3>
+            </div>
+            <div className="p-6">
+              <div className="max-w-md">
+                <h4 className="text-md font-medium text-gray-900 mb-4">Add New Vacation Period</h4>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Vacation Name
+                    </label>
+                    <input
+                      type="text"
+                      value={vacationForm.name}
+                      onChange={(e) => setVacationForm({ ...vacationForm, name: e.target.value })}
+                      placeholder="e.g., Eid Holiday"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      From Date
+                    </label>
+                    <input
+                      type="date"
+                      value={vacationForm.from}
+                      onChange={(e) => setVacationForm({ ...vacationForm, from: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      To Date
+                    </label>
+                    <input
+                      type="date"
+                      value={vacationForm.to}
+                      onChange={(e) => setVacationForm({ ...vacationForm, to: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  
+                  <button
+                    onClick={handleCreateVacation}
+                    disabled={createVacationMutation.isPending}
+                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {createVacationMutation.isPending ? 'Creating...' : 'Create Vacation Period'}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}

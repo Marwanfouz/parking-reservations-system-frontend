@@ -230,3 +230,50 @@ export async function updateCategoryRates(categoryId: string, rateNormal: number
   
   return response.json();
 }
+
+// Additional admin functions for rush hours and vacations
+export async function createRushHours(data: { weekDay: number; from: string; to: string }, token: string): Promise<any> {
+  const response = await fetch(`${API_BASE_URL}/admin/rush-hours`, {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to create rush hours: ${response.statusText}`);
+  }
+  
+  return response.json();
+}
+
+export async function createVacation(data: { name: string; from: string; to: string }, token: string): Promise<any> {
+  const response = await fetch(`${API_BASE_URL}/admin/vacations`, {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to create vacation: ${response.statusText}`);
+  }
+  
+  return response.json();
+}
+
+export async function fetchCategories(token: string): Promise<any[]> {
+  const response = await fetch(`${API_BASE_URL}/master/categories`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch categories: ${response.statusText}`);
+  }
+  
+  return response.json();
+}
