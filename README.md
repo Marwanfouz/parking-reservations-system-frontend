@@ -6,6 +6,8 @@ A modern, responsive parking reservation system built with Next.js 15, featuring
 
 ### Core Functionality
 
+<img width="1919" height="909" alt="image" src="https://github.com/user-attachments/assets/f2092288-fb68-4a30-a27d-8bc35eb7cde1" />
+
 - **Gate Management**: Multi-gate parking system with real-time zone monitoring
 - **Visitor Reservations**: One-time parking reservations for visitors
 - **Subscription Management**: Monthly/yearly parking subscriptions for employees
@@ -14,12 +16,22 @@ A modern, responsive parking reservation system built with Next.js 15, featuring
 
 ### User Experience
 
+<img width="1919" height="904" alt="image" src="https://github.com/user-attachments/assets/cfbf382c-2e85-4bdb-86c8-9c0b0b562aef" />
+
+<img width="394" height="798" alt="image" src="https://github.com/user-attachments/assets/716a2ac1-7243-4769-aedc-9c3c521c8209" />
+
 - **Responsive Design**: Mobile-first approach with hamburger menu for admin
 - **Modern UI**: Glass morphism effects, gradients, and smooth animations
 - **Real-time Notifications**: Toast notifications for user feedback
 - **Optimized Performance**: Reduced animations and transitions for better performance
 
 ### Admin Features
+
+<img width="1919" height="906" alt="image" src="https://github.com/user-attachments/assets/19de4022-7559-4017-8d08-e49d730183b7" />
+
+<img width="1919" height="908" alt="image" src="https://github.com/user-attachments/assets/756b5f7f-4e35-485b-9271-f6c586948fd3" />
+
+<img width="1919" height="904" alt="image" src="https://github.com/user-attachments/assets/0494295b-3157-47bb-a0ee-4085f2d18843" />
 
 - **Zone Management**: Open/close parking zones with real-time status updates
 - **Employee Management**: Create and manage employee accounts (includes POST /admin/users API)
