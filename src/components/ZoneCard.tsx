@@ -1,83 +1,109 @@
+'use client';
+
+import React from 'react';
+
 interface ZoneCardProps {
-  readonly zone: {
-    readonly id: string;
-    readonly name: string;
-    readonly categoryId: string;
-    readonly occupied: number;
-    readonly free: number;
-    readonly reserved: number;
-    readonly availableForVisitors: number;
-    readonly availableForSubscribers: number;
-    readonly rateNormal: number;
-    readonly rateSpecial: number;
-    readonly open: boolean;
+  zone: {
+    id?: string;
+    zoneId?: string;
+    name: string;
+    categoryId?: string;
+    open: boolean;
+    free: number;
+    occupied: number;
+    totalSlots: number;
+    reserved: number;
+    availableForVisitors: number;
+    availableForSubscribers: number;
+    subscriberCount: number;
   };
-  readonly onSelect: (zoneId: string) => void;
-  readonly disabled?: boolean;
-  readonly selected?: boolean;
+  onStatusUpdate: (zoneId: string, open: boolean) => void;
+  isUpdating: boolean;
 }
 
-export function ZoneCard({ zone, onSelect, disabled, selected }: ZoneCardProps) {
+const ZoneCard = React.memo(({ zone, onStatusUpdate, isUpdating }: ZoneCardProps) => {
+  const zoneId = zone.id ?? zone.zoneId;
+  const buttonText = zone.open ? 'Close Zone' : 'Open Zone';
+  
+  let buttonClasses: string;
+  if (zone.open) {
+    buttonClasses = 'bg-gradient-to-r from-red-500 to-red-600 text-white hover:shadow-lg';
+  } else {
+    buttonClasses = 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:shadow-lg';
+  }
+  
+  const statusClasses = zone.open ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+  const statusText = zone.open ? 'Open' : 'Closed';
+  
   return (
-    <button 
-      className={`border-2 rounded-lg p-4 cursor-pointer transition-all text-left w-full ${
-        selected ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
-      } ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-blue-300'}`}
-      onClick={() => !disabled && onSelect(zone.id)}
-      disabled={disabled}
-      aria-label={`Zone ${zone.name}, ${zone.availableForVisitors} available for visitors`}
-    >
-      <div className="flex justify-between items-start mb-3">
-        <h3 className="text-xl font-semibold">{zone.name}</h3>
-        <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">
-          {zone.categoryId}
-        </span>
+    <div className="bg-white/80 backdrop-blur-sm border border-white/20 rounded-xl p-4 sm:p-6 hover:shadow-lg hover-transition">
+      <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-3">
+        <div className="flex-1 min-w-0">
+          <h4 className="font-semibold text-gray-900 text-base sm:text-lg truncate">{zone.name}</h4>
+          <p className="text-xs sm:text-sm text-gray-600">ID: {zoneId}</p>
+          <span className="inline-block px-2 sm:px-3 py-1 text-xs font-medium bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 rounded-full mt-2">
+            {zone.categoryId?.replace('cat_', '').toUpperCase() ?? 'N/A'}
+          </span>
+        </div>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+          <span className={`px-2 sm:px-3 py-1 text-xs font-medium rounded-full ${statusClasses}`}>
+            {statusText}
+          </span>
+          <button 
+            onClick={() => onStatusUpdate(zoneId!, !zone.open)}
+            disabled={isUpdating}
+            className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition-shadow duration-200 shadow-lg ${buttonClasses} disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto`}
+          >
+            {isUpdating ? (
+              <span className="flex items-center justify-center gap-2">
+                <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span className="hidden sm:inline">Updating...</span>
+                <span className="sm:hidden">...</span>
+              </span>
+            ) : (
+              <span className="truncate">{buttonText}</span>
+            )}
+          </button>
+        </div>
       </div>
       
-      <div className="grid grid-cols-2 gap-4 mb-3">
-        <div className="text-center">
-          <div className="text-2xl font-bold text-green-600">{zone.free}</div>
-          <div className="text-sm text-gray-800">Free</div>
+      <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-4">
+        <div className="text-center bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-2 sm:p-3 border border-green-200">
+          <div className="text-lg sm:text-xl font-bold text-green-600">{zone.free}</div>
+          <div className="text-xs text-gray-600 font-medium">Free</div>
         </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-blue-600">{zone.occupied}</div>
-          <div className="text-sm text-gray-800">Occupied</div>
+        <div className="text-center bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-2 sm:p-3 border border-blue-200">
+          <div className="text-lg sm:text-xl font-bold text-blue-600">{zone.occupied}</div>
+          <div className="text-xs text-gray-600 font-medium">Occupied</div>
         </div>
       </div>
       
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-800">Available for Visitors:</span>
+      <div className="space-y-1 sm:space-y-2 text-xs sm:text-sm bg-gray-50/50 rounded-lg p-2 sm:p-3">
+        <div className="flex justify-between">
+          <span className="text-gray-600">Total:</span>
+          <span className="font-semibold">{zone.totalSlots}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-600">Reserved:</span>
+          <span className="font-semibold">{zone.reserved}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-600">Available Visitors:</span>
           <span className={`font-semibold ${zone.availableForVisitors > 0 ? 'text-green-600' : 'text-red-600'}`}>
             {zone.availableForVisitors}
           </span>
         </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-800">Available for Subscribers:</span>
-          <span className="font-semibold text-blue-600">{zone.availableForSubscribers}</span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-800">Reserved:</span>
-          <span className="font-semibold text-orange-600">{zone.reserved}</span>
+        <div className="flex justify-between">
+          <span className="text-gray-600">Available Subscribers:</span>
+          <span className={`font-semibold ${zone.availableForSubscribers > 0 ? 'text-blue-600' : 'text-red-600'}`}>
+            {zone.availableForSubscribers}
+          </span>
         </div>
       </div>
-      
-      <div className="mt-3 pt-3 border-t">
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-800">Normal Rate:</span>
-          <span className="font-semibold text-gray-900">${zone.rateNormal}/hr</span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-800">Special Rate:</span>
-          <span className="font-semibold text-gray-900">${zone.rateSpecial}/hr</span>
-        </div>
       </div>
-      
-      {!zone.open && (
-        <div className="mt-2 text-center text-red-600 font-semibold">
-          Zone Closed
-        </div>
-      )}
-    </button>
   );
-}
+});
+
+ZoneCard.displayName = 'ZoneCard';
+
+export default ZoneCard;

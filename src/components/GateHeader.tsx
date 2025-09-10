@@ -1,3 +1,5 @@
+import { Car, Clock } from 'lucide-react';
+
 interface GateHeaderProps {
   readonly gateId: string;
   readonly gateName: string;
@@ -23,20 +25,28 @@ export function GateHeader({ gateId, gateName, connectionStatus, currentTime }: 
   };
 
   return (
-    <header className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">{gateName}</h1>
-          <p className="text-lg text-white">Gate {gateId}</p>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className={`w-3 h-3 rounded-full ${getStatusColor()} animate-pulse`} />
-            <span className="text-sm text-white">{getStatusText()}</span>
+    <header className="bg-white border-b">
+      <div className="container mx-auto px-6 py-5 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-soft">
+            <Car className="w-6 h-6" />
           </div>
-                 <div className="text-sm text-white">
-                   {currentTime}
-                 </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">{gateName}</h1>
+            <p className="text-sm text-gray-600">Gate {gateId}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2">
+            <span className={`inline-flex items-center gap-2 text-sm px-2.5 py-1.5 rounded-full bg-gray-100 text-gray-700`}>
+              <span className={`w-2 h-2 rounded-full ${getStatusColor()}`} />
+              {getStatusText()}
+            </span>
+          </div>
+          <div className="flex items-center gap-2 text-gray-600">
+            <Clock className="w-4 h-4" />
+            <span className="text-sm font-medium">{currentTime}</span>
+          </div>
         </div>
       </div>
     </header>

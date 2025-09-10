@@ -27,8 +27,8 @@ export function TicketModal({ ticket, zone, gate, isOpen, onClose }: TicketModal
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 ticket-modal">
+    <div className="fixed inset-0 bg-black/20 backdrop-blur-md flex items-center justify-center z-50 animate-fade-in-up">
+      <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 max-w-md w-full mx-4 ticket-modal shadow-2xl border border-white/20 animate-scale-in">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">Parking Ticket</h2>
           <button 
@@ -72,16 +72,16 @@ export function TicketModal({ ticket, zone, gate, isOpen, onClose }: TicketModal
             </div>
           </div>
           
-          <div className="flex gap-2 no-print">
+          <div className="flex gap-3 no-print">
             <button 
               onClick={handlePrint}
-              className="flex-1 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105 font-semibold"
             >
               Print Ticket
             </button>
             <button 
               onClick={onClose}
-              className="flex-1 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700"
+              className="flex-1 bg-gradient-to-r from-gray-600 to-gray-700 text-white py-3 px-4 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105 font-semibold"
             >
               Close
             </button>

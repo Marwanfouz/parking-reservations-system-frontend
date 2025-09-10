@@ -13,7 +13,7 @@ interface SubscriptionInputProps {
       readonly model: string;
       readonly color: string;
     }>;
-  };
+  } | undefined;
 }
 
 export function SubscriptionInput({ 
@@ -24,6 +24,7 @@ export function SubscriptionInput({
   error, 
   subscription 
 }: SubscriptionInputProps) {
+  
   return (
     <div className="space-y-4">
       <div>
@@ -60,8 +61,8 @@ export function SubscriptionInput({
           <div className="mt-2 text-sm text-gray-800">
             <strong>Registered Cars:</strong>
             <ul className="mt-1 space-y-1">
-              {subscription.cars.map((car, index) => (
-                <li key={index} className="text-gray-700">
+              {subscription.cars.map((car) => (
+                <li key={car.plate} className="text-gray-700">
                   {car.plate} - {car.brand} {car.model} ({car.color})
                 </li>
               ))}
